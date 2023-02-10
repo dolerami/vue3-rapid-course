@@ -1,16 +1,19 @@
 <template>
   <div>
-    <div>
-      <button @click="addLike">Like</button>
-<!--      V-on is a directive and event listener, so after this you have to write a certain function to operate-->
-<!--      If it's v-on:click, that means that the function will work when you click that object-->
-<!--      There is a simplified method for writing v-on:, which is just @-->
-      <button @click="addDislike">Dislike</button>
+    <div class="post">
+      <div><strong>Title:</strong> A post on JavaScript</div>
+      <div><strong>Title:</strong> JavaScript is a universal programming language</div>
     </div>
-    <div>Amount of likes: <strong>{{likes}}</strong></div>
-<!--    It's possible to get the variables from the data section by typing them in double {}s, like this {{likes}}-->
-    <div>Amount of dislikes: <strong>{{dislikes}}</strong></div>
+    <div class="post">
+      <div><strong>Title:</strong> A post on JavaScript</div>
+      <div><strong>Title:</strong> JavaScript is a universal programming language</div>
+    </div>
+    <div class="post">
+      <div><strong>Title:</strong> A post on JavaScript</div>
+      <div><strong>Title:</strong> JavaScript is a universal programming language</div>
+    </div>
   </div>
+<!--In the template section we write the HTML of the project-->
 </template>
 
 <script>
@@ -35,8 +38,28 @@ export default{
   // methods section is where you usually set your functions to operate them later
 }
 // When you create a component, you have to export it and everything in it as an object, that's why it's being written in {}
+// In the script section we write the model and methods of the project
 </script>
 
 <style>
+/*If we write <style scoped>, that means that the CSS will be applicable only for that particular file*/
+/*As soon as we are in the main component file, we don't have to use the scoped version for style*/
+* {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+  /*When box-sizing is border-box, it makes the element size to remain the same when gaining some padding*/
+  /*In this case the content of the element will get smaller*/
+}
 
+.post{
+  padding:15px;
+  border:2px solid teal;
+  margin-top: 15px;
+}
+/*We can refer to the object by it's class just writing .(object class), also by id - #(object id)*/
+
+/*When we write *{}, that means that the styles inside the {} will refer to the whole file*/
+/*So it will not work if we have scoped in the style tag*/
+/*And in the style section we write the CSS of the project*/
 </style>
