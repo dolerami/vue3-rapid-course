@@ -1,6 +1,10 @@
 <template>
   <div class="app">
-    <form>
+    <form @submit.prevent>
+<!--      So to make the submit work properly, we're adding a modification to the form tag-->
+<!--      It will be v-on:submit.prevent or just @submit.prevent-->
+<!--      In this case it will prevent the browser from being refreshed-->
+<!--      So we will be able to add a new object, and it will be visible and not get lost by refreshing the browser-->
       <h4>The creation of a post</h4>
       <input
           v-bind:value="title"
@@ -99,6 +103,14 @@ export default{
       this.posts.push(newPost);
       // So after setting the variable object we're pushing it as a new object next to the others
       // But this method won't work now as we have to learn something else for it
+      // So this is a usual thing for the browser as a reaction to the actions of submit
+      // If we need to cancel the by default actions of the browser in the form, we have to call the method prevent default
+      // We could do that by writing an argument "event" in the method
+      // And later adding event.stopPropagation() or/and event.preventDefault()
+      // But we're in Vue 3, so we can do it with modifications, which is easier
+      this.title = '';
+      this.body = '';
+      // This is important to have clean inputs after the object creation
     },
     // inputTitle(event){
     //   // we are sending the event as an argument for this method
