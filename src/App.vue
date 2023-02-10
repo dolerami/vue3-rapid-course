@@ -2,9 +2,41 @@
   <div class="app">
     <form>
       <h4>The creation of a post</h4>
-      <input class="input" type="text" placeholder="Title">
-      <input class="input" type="text" placeholder="Content">
-      <button class="btn">Create</button>
+      <input
+          v-bind:value="title"
+          @input="title=$event.target.value"
+          class="input"
+          type="text"
+          placeholder="Title"
+      >
+<!--      v-bind directive helps us to bind some data with a particular component-->
+<!--      So after v-bind: you have to write something, usually an attribute of that tag-->
+<!--      In this case it's the value, so we've bound the value of the input with the variable "title"-->
+<!--      Then you write the model(variable) you want to bind the attribute with, here it's "title"-->
+<!--      After that you have to write also a v-on:(event) or @(event) and set a method for that-->
+<!--      Here this event is input, so that the method will work when you input or delete something in the input line-->
+<!--      Then you have to set a method for that, we will comment that method below in the methods' chapter-->
+<!--      As a result whatever you insert in the input "title" as a value, it will be inserted in the model "title" too-->
+<!--      But we can make it even simpler, so we dont have to write a separate method and do a v-on with the event-->
+<!--      So let's keep this as a comment here-->
+<!--      @input="inputTitle"-->
+<!--      And let's write it another way - @input="title=$event.target.value"-->
+<!--      Here we've said that our variable "title" takes the value of the event's target-->
+<!--      in this case we don't need the method "inputTitle" below, so I'll comment it-->
+      <input
+          v-bind:value="body"
+          @input="body=$event.target.value"
+          class="input"
+          type="text"
+          placeholder="Content"
+      >
+      <button
+          class="btn"
+          @click="createPost"
+      >
+        Create
+      </button>
+<!--      Here we're operating a new method when clicking the button, so the comments are next to the method-->
     </form>
     <div class="post" v-for="post in posts">
 <!--    We have a directive v-for, which is the same as "foreach" in JS, so it's making a loop and checking each element inside-->
@@ -45,14 +77,36 @@ export default{
           title:'JavaScript 4',
           body:'The content of the post 4',
         },
-      ]
+      ],
       // You can create a variable and set it as an array as well and make it's content objects
+      title:'',
+      body:'',
     }
     // here we set the variables just by writing their names and then setting the values
   },
   // data section is for setting the variables, let's say global variables for that specific component
   methods:{
-
+    createPost(){
+      const newPost={
+        // Here we're setting a new local variable while clicking the button, which is an object itself
+        // So this object has all the necessary fields as the objects above have
+        id:Date.now(),
+        // As an id we will take the current date with this method
+        title:this.title,
+        body:this.body,
+        // And we're getting the values of our title and body models to set them in the new object after clicking the button
+      }
+      this.posts.push(newPost);
+      // So after setting the variable object we're pushing it as a new object next to the others
+      // But this method won't work now as we have to learn something else for it
+    },
+    // inputTitle(event){
+    //   // we are sending the event as an argument for this method
+    //   // this is important, because else it will not understand what event we're talking about
+    //   this.title=event.target.value;
+    //   // here we've said that the model title is equal to the input event target's value
+    //   // to understand what is that event target value, we can do console.log(event); and look in the details
+    // },
   }
   // methods section is where you usually set your functions to operate them later
 }
@@ -83,6 +137,8 @@ form{
 .btn{
   margin-top: 15px;
   align-self: flex-end;
+  /*It will only work when the parent object has display: flex; style*/
+  /*Align-self style helps the object to align itself in an object with display flex style*/
   padding: 10px 15px;
   background: none;
   color: teal;
