@@ -6,8 +6,8 @@
     <!--      So we will be able to add a new object, and it will be visible and not get lost by refreshing the browser-->
     <h4>The creation of a post</h4>
     <input
-        v-bind:value="title"
-        @input="title=$event.target.value"
+        :value="post.title"
+        @input="post.title=$event.target.value"
         class="input"
         type="text"
         placeholder="Title"
@@ -26,13 +26,18 @@
     <!--      And let's write it another way - @input="title=$event.target.value"-->
     <!--      Here we've said that our variable "title" takes the value of the event's target-->
     <!--      in this case we don't need the method "inputTitle" below, so I'll comment it-->
+    <!--      So v-bind: has an easier writing method as well, which is just :-->
     <input
-        v-bind:value="body"
-        @input="body=$event.target.value"
+        :value="post.body"
+        @input="post.body=$event.target.value"
         class="input"
         type="text"
         placeholder="Content"
     >
+<!--    As we've created child components, we need to send the information from child to the parent to be visible in browser-->
+<!--    For that we need to create a new model here - posts, which is an object with variables title and body-->
+<!--    After that we have to change the v-bind and v-on in the inputs, referring to the post first, then to the title and body-->
+<!--    so instead :value="title"/"body" & @input="title/body=$event.target.value" we will write "...post.title"/"post.body"-->
     <button
         class="btn"
     >
@@ -45,7 +50,14 @@
 
 <script>
 export default {
-
+  data(){
+    return{
+      post:{
+        title:'',
+        body:'',
+      }
+    }
+  }
 }
 </script>
 

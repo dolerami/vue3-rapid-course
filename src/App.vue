@@ -2,7 +2,12 @@
   <div class="app">
     <post-form/>
 <!--    So after the registration of the components we can type and use them here-->
-    <post-list/>
+    <post-list :posts="posts"/>
+<!--    We are not writing the model and methods in the reusable component, which if done would be a wrong thing-->
+<!--    To send the existing models and methods from the parent to the child, we're using props-->
+<!--    For that we have to bind our model with the child component by v-bind-->
+<!--    After v-bind: we are writing the argument we want to send, and that is usually equal to the model name-->
+<!--    Here also we will write v-bind shorter - :-->
   </div>
 <!--In the template section we write the HTML of the project-->
 </template>
