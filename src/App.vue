@@ -1,14 +1,23 @@
 <template>
   <div>
-    It's working!
-    <button>Click me</button>
-    <input type="text">
-    <textarea name="" id="" cols="30" rows="10"></textarea>
+    <div>
+      <button>Like</button>
+      <button>Dislike</button>
+    </div>
+    <div>Amount of likes: <strong>{{likes}}</strong></div>
+    <div>Amount of dislikes: <strong>{{dislikes}}</strong></div>
   </div>
 </template>
 
 <script>
-
+export default{
+  data(){
+    return{
+      likes:0,
+      dislikes:5
+    }
+  }
+}
 </script>
 
 <style>
