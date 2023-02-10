@@ -1,5 +1,11 @@
 <template>
-  <div>
+  <div class="app">
+    <form>
+      <h4>The creation of a post</h4>
+      <input class="input" type="text" placeholder="Title">
+      <input class="input" type="text" placeholder="Content">
+      <button class="btn">Create</button>
+    </form>
     <div class="post" v-for="post in posts">
 <!--    We have a directive v-for, which is the same as "foreach" in JS, so it's making a loop and checking each element inside-->
 <!--    Usually we're setting the arrays' and objects' names in plural-->
@@ -65,6 +71,24 @@ export default{
   /*In this case the content of the element will get smaller*/
 }
 
+.app{
+  padding: 20px;
+}
+
+form{
+  display:flex;
+  flex-direction: column;
+}
+
+.btn{
+  margin-top: 15px;
+  align-self: flex-end;
+  padding: 10px 15px;
+  background: none;
+  color: teal;
+  border: 1px solid teal;
+}
+
 .post{
   padding:15px;
   border:2px solid teal;
@@ -72,6 +96,12 @@ export default{
 }
 /*We can refer to the object by it's class just writing .(object class), also by id - #(object id)*/
 
+.input{
+  width: 100%;
+  border: 1px solid teal;
+  padding: 10px 15px;
+  margin-top: 15px;
+}
 /*When we write *{}, that means that the styles inside the {} will refer to the whole file*/
 /*So it will not work if we have scoped in the style tag*/
 /*And in the style section we write the CSS of the project*/
