@@ -1,62 +1,26 @@
 <template>
   <div class="app">
-    <form @submit.prevent>
-<!--      So to make the submit work properly, we're adding a modification to the form tag-->
-<!--      It will be v-on:submit.prevent or just @submit.prevent-->
-<!--      In this case it will prevent the browser from being refreshed-->
-<!--      So we will be able to add a new object, and it will be visible and not get lost by refreshing the browser-->
-      <h4>The creation of a post</h4>
-      <input
-          v-bind:value="title"
-          @input="title=$event.target.value"
-          class="input"
-          type="text"
-          placeholder="Title"
-      >
-<!--      v-bind directive helps us to bind some data with a particular component-->
-<!--      So after v-bind: you have to write something, usually an attribute of that tag-->
-<!--      In this case it's the value, so we've bound the value of the input with the variable "title"-->
-<!--      Then you write the model(variable) you want to bind the attribute with, here it's "title"-->
-<!--      After that you have to write also a v-on:(event) or @(event) and set a method for that-->
-<!--      Here this event is input, so that the method will work when you input or delete something in the input line-->
-<!--      Then you have to set a method for that, we will comment that method below in the methods' chapter-->
-<!--      As a result whatever you insert in the input "title" as a value, it will be inserted in the model "title" too-->
-<!--      But we can make it even simpler, so we dont have to write a separate method and do a v-on with the event-->
-<!--      So let's keep this as a comment here-->
-<!--      @input="inputTitle"-->
-<!--      And let's write it another way - @input="title=$event.target.value"-->
-<!--      Here we've said that our variable "title" takes the value of the event's target-->
-<!--      in this case we don't need the method "inputTitle" below, so I'll comment it-->
-      <input
-          v-bind:value="body"
-          @input="body=$event.target.value"
-          class="input"
-          type="text"
-          placeholder="Content"
-      >
-      <button
-          class="btn"
-          @click="createPost"
-      >
-        Create
-      </button>
-<!--      Here we're operating a new method when clicking the button, so the comments are next to the method-->
-    </form>
-    <div class="post" v-for="post in posts">
-<!--    We have a directive v-for, which is the same as "foreach" in JS, so it's making a loop and checking each element inside-->
-<!--    Usually we're setting the arrays' and objects' names in plural-->
-<!--    So when we write v-for, we are referring to each element by writing it's name in singular-->
-      <div><strong>Title:</strong>{{post.title}}</div>
-      <div><strong>Content:</strong>{{post.body}}</div>
-<!--      So as you see here we wrote just 1 HTML tag per element, but we have 4 sections in our browser-->
-<!--      That's how it's working with arrays and objects-->
-    </div>
+    <post-form/>
+<!--    So after the registration of the components we can type and use them here-->
+    <post-list/>
   </div>
 <!--In the template section we write the HTML of the project-->
 </template>
 
 <script>
+import PostForm from "@/components/PostForm";
+import PostList from "@/components/PostList";
+// This is important thing for using the components, firstly we have to import them
+// in the url if we write @/, which is alias, it means the folder src. which is very comfortable to use
+// We could also write ./, but for other cases it would be troublesome
+// So we have to import them, but it's not enough to use the components, we have to also register them
+// It's being done in the components: section in export default
+
 export default{
+  components:{
+    PostForm,
+    PostList,
+  },
   data(){
     return{
       posts:[
@@ -141,35 +105,6 @@ export default{
   padding: 20px;
 }
 
-form{
-  display:flex;
-  flex-direction: column;
-}
-
-.btn{
-  margin-top: 15px;
-  align-self: flex-end;
-  /*It will only work when the parent object has display: flex; style*/
-  /*Align-self style helps the object to align itself in an object with display flex style*/
-  padding: 10px 15px;
-  background: none;
-  color: teal;
-  border: 1px solid teal;
-}
-
-.post{
-  padding:15px;
-  border:2px solid teal;
-  margin-top: 15px;
-}
-/*We can refer to the object by it's class just writing .(object class), also by id - #(object id)*/
-
-.input{
-  width: 100%;
-  border: 1px solid teal;
-  padding: 10px 15px;
-  margin-top: 15px;
-}
 /*When we write *{}, that means that the styles inside the {} will refer to the whole file*/
 /*So it will not work if we have scoped in the style tag*/
 /*And in the style section we write the CSS of the project*/
