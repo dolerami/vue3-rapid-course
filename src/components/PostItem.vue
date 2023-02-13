@@ -15,10 +15,9 @@
 </template>
 
 <script>
-import MyButton from "@/components/UI/MyButton";
+// As soon as we have set new global UI components, we don't need to import them and register here
 
 export default {
-  components: {MyButton},
   props: {
     // We need new props section to send the data from the mother to here
     post: {
