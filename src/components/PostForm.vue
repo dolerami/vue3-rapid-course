@@ -1,18 +1,16 @@
 <template>
   <form @submit.prevent>
     <h4>The creation of a post</h4>
-    <input
+    <my-input
         v-model="post.title"
-        class="input"
         type="text"
         placeholder="Title"
-    >
-    <input
+    />
+    <my-input
         v-model="post.body"
-        class="input"
         type="text"
         placeholder="Content"
-    >
+    />
 <!--    So v-model is the short way to write v-bind and v-on, it's doing both functions at the same time-->
 <!--    It's not a thing to write everywhere, but is very useful-->
 <!--    in Vue 3 you can use it many times in a component, while in Vue 2 you can do it only once-->
@@ -70,12 +68,5 @@ export default {
 form{
   display:flex;
   flex-direction: column;
-}
-
-.input{
-  width: 100%;
-  border: 1px solid teal;
-  padding: 10px 15px;
-  margin-top: 15px;
 }
 </style>
