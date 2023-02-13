@@ -1,9 +1,5 @@
 <template>
   <form @submit.prevent>
-    <!--      So to make the submit work properly, we're adding a modification to the form tag-->
-    <!--      It will be v-on:submit.prevent or just @submit.prevent-->
-    <!--      In this case it will prevent the browser from being refreshed-->
-    <!--      So we will be able to add a new object, and it will be visible and not get lost by refreshing the browser-->
     <h4>The creation of a post</h4>
     <input
         v-model="post.title"
@@ -26,7 +22,6 @@
     >
       Create
     </button>
-    <!--      Here we're operating a new method when clicking the button, so the comments are next to the method-->
   </form>
 </template>
 
@@ -43,12 +38,22 @@ export default {
   methods:{
     createPost(){
       this.post.id = Date.now();
-      this.posts.push(newPost);
-      this.title = '';
-      this.body = '';
-      // We have cut the method from the parent and simply put here
-      // Just changed the variable, cause we don't need it
-      // Only added an id to the model
+      this.$emit('create', this.post)
+      // We can't send the data from the child component to the parent directly
+      // But we can create an event in the child, and make the parent listen to that particular event
+      // This is being done by the function $emit
+      // The first parameter of the $emit is always the name of the event it's creating (here - create)
+      // The second parameter is the value sent by that function for the parent to listen to them (here - the object 'post')
+      // We can send as many values as we want after each other (f.e. this.post, "second thing", 3, title, e.c.)
+      // Just in this case each of them will be indexed, so this.post will be the 1st, "second thing" - the 2nd, e.c.
+      // So by the function in the parent we'll have to write 3 arguments for each of these values
+      this.post = {
+        title: '',
+        body: '',
+      }
+      // And here we're just cleaning the input line after the data insert
+      // Usually this cleaning is being done in the child component, not in the parent
+      // The next steps for this event listening in the parent are being done there
     },
   }
 }
@@ -63,15 +68,11 @@ form{
 .btn{
   margin-top: 15px;
   align-self: flex-end;
-  /*It will only work when the parent object has display: flex; style*/
-  /*Align-self style helps the object to align itself in an object with display flex style*/
   padding: 10px 15px;
   background: none;
   color: teal;
   border: 1px solid teal;
 }
-
-/*We can refer to the object by it's class just writing .(object class), also by id - #(object id)*/
 
 .input{
   width: 100%;
