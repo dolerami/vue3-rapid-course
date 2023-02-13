@@ -1,12 +1,19 @@
 <template>
-  <div class="post" v-for="post in posts">
-    <div><strong>Title:</strong>{{post.title}}</div>
-    <div><strong>Content:</strong>{{post.body}}</div>
+<!--  In Vue2 we have to have a root tag here, f.i. div, but in Vue3 it's not mandatory-->
+<!--But when we use loops in Vue3, it's better to have a root tag-->
+  <div>
+    <h3>Users List</h3>
+    <post-item
+        :post="post"
+        v-for="post in posts"
+    />
   </div>
 </template>
 
 <script>
+import PostItem from "@/components/PostItem";
 export default {
+  components: {PostItem},
   props:{
     // Props are meant to gain the information from the parent component
     // We just have to make an object, where we're referring to the argument created in the parent component (here - posts)
