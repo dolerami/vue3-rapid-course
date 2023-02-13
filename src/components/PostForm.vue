@@ -16,17 +16,25 @@
 <!--    So v-model is the short way to write v-bind and v-on, it's doing both functions at the same time-->
 <!--    It's not a thing to write everywhere, but is very useful-->
 <!--    in Vue 3 you can use it many times in a component, while in Vue 2 you can do it only once-->
-    <button
-        class="btn"
+    <my-button
+        style="align-self: flex-end; margin-top: 15px;"
         @click="createPost"
     >
       Create
-    </button>
+    </my-button>
+<!--    As you see, we've changes the button tag into the MyButton component-->
+<!--    As soon as it's a component tag not an ordinary one, it doesn't understand the text written in the tag-->
+<!--    That's why we use the "slot" tag in the component, so the writing "Create" could be visible on the page-->
+<!--    About the style, it's always better to have a class and to do the styling in the style section-->
+<!--    But here we can afford ourselves to do so-->
   </form>
 </template>
 
 <script>
+import MyButton from "@/components/UI/MyButton";
+
 export default {
+  components: {MyButton},
   data(){
     return{
       post:{
@@ -63,15 +71,6 @@ export default {
 form{
   display:flex;
   flex-direction: column;
-}
-
-.btn{
-  margin-top: 15px;
-  align-self: flex-end;
-  padding: 10px 15px;
-  background: none;
-  color: teal;
-  border: 1px solid teal;
 }
 
 .input{
