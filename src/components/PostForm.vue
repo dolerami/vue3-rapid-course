@@ -6,14 +6,19 @@
         type="text"
         placeholder="Title"
     />
+<!--    So v-model is the short way to write v-bind and v-on, it's doing both functions at the same time-->
+<!--    It's not a thing to write everywhere, but is very useful-->
+<!--    in Vue 3 you can use it many times in a component, while in Vue 2 you can do it only once-->
     <my-input
         v-model="post.body"
         type="text"
         placeholder="Content"
     />
-<!--    So v-model is the short way to write v-bind and v-on, it's doing both functions at the same time-->
-<!--    It's not a thing to write everywhere, but is very useful-->
-<!--    in Vue 3 you can use it many times in a component, while in Vue 2 you can do it only once-->
+<!--    Okay, so usually if we write v-model, it has some following attribute by default-->
+<!--    In Vue2 it's v-model:value (:value we don't write usually), and in Vue3 it's v-model:modelValue-->
+<!--    In Vue2 we use only 1 v-model, so there is no need to attach an attribute to that v-model, that's why it's pure-->
+<!--    In Vue3 we can use more than 1, so we can attach attributes to define that v-model's aim as well-->
+<!--    As in Vue3 v-model works with modelValue attribute by default, it means that in the child we must use that in props-->
     <my-button
         style="align-self: flex-end; margin-top: 15px;"
         @click="createPost"
