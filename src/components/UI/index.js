@@ -3,10 +3,12 @@ import MyButton from "@/components/UI/MyButton";
 // We've imported the components needed to be registered globally (here - MyButton)
 import MyInput from "@/components/UI/MyInput";
 // Importing MyInput as well
+import MyDialog from "@/components/UI/MyDialog";
 
 export default [
     MyButton,
     MyInput,
+    MyDialog,
 ]
 // Then we've exported them in an array, where they appear as a separate object
 // The next step is the registration of this file & components in the main.js file

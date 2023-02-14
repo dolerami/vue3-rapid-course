@@ -1,8 +1,23 @@
 <template>
   <div class="app">
-    <post-form
-        @create="createPost"
-    />
+    <h1>Page with the posts</h1>
+    <my-button
+      @click="showDialog"
+      style="margin: 15px 0;"
+    >
+      Create a post
+    </my-button>
+    <my-dialog v-model:show="dialogVisible">
+<!--      Here we've imported the dialog component as a new tag and put the post-form component inside-->
+<!--      And we've bound the show property to this tag to send it's result to the child (:show="true")-->
+<!--      The value is true, so it's visible, and if it's false from the child, it will not be visible-->
+<!--      As we send the event from the child by $emit, we're using a v-model directive here-->
+<!--      It will take the attribute 'show', because we've emitted it from the child as an event-->
+<!--      And we will also change the result, which will be a new model, we'll name it 'dialogVisible'-->
+      <post-form
+          @create="createPost"
+      />
+    </my-dialog>
     <post-list
         :posts="posts"
         @remove="removePost"
@@ -55,6 +70,8 @@ export default{
           body:'The content of the post 4',
         },
       ],
+      dialogVisible: false,
+      // This model's value is false by default, so it will not be visible in the beginning
     }
   },
   methods: {
@@ -68,6 +85,8 @@ export default{
       this.posts.push(post);
       // Then we're pushing the event's value (which is the object "post" from the child) into the array "posts"
       // For that we simply have to get the same argument which is already set in the function (here - (post))
+      this.dialogVisible = false;
+      // Now we say that after creating a post make the dialog window disappear
     },
     removePost(post){
       // We're taking an argument for this method the post we want to remove
@@ -81,6 +100,9 @@ export default{
       // Each post (p) has its unique id (p.id), which shouldn't be equal (!==) to the id of the removed post (post.id)
       // After this the function removes the post, on which the 'Delete' button has been clicked
       // And then it immidiately sets a new array of elements with unique ids without the removed element
+    },
+    showDialog(){
+      this.dialogVisible = true;
     }
   }
 }
