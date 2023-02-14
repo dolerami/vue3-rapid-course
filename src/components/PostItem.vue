@@ -7,7 +7,13 @@
       <div><strong>Content:</strong>{{post.body}}</div>
     </div>
     <div class="post__btns">
-      <my-button>Delete</my-button>
+      <my-button
+        @click="$emit('remove', post)"
+      >
+        Delete
+      </my-button>
+<!--      Here we listened to the event click and set an appropriate function for it-->
+<!--      It is $emit, which is sending the model "post" to the parent component with the name 'remove'-->
     </div>
 <!--    We've created a new button for deleting the each post, but didn't set it up-->
 <!--    But as soon as we've created a new component for buttons, let's use that instead-->

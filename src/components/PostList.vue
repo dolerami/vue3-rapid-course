@@ -4,9 +4,15 @@
   <div>
     <h3>Users List</h3>
     <post-item
-        :post="post"
         v-for="post in posts"
+        :post="post"
+        :key="post.id"
+        @remove="$emit('remove', post)"
     />
+    <!--      Here we listened to the event click and set an appropriate function for it-->
+    <!--      It is $emit, which is sending the model "post" to the parent component with the name 'remove'-->
+    <!--      But as soon as here we're using a loop, we tell him to set a key parameter as well-->
+    <!--      The key is the id of each post, meaning that in the loop for each post the key parameter will be its id-->
   </div>
 </template>
 
