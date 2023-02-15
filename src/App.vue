@@ -1,12 +1,6 @@
 <template>
   <div class="app">
     <h1>Page with the posts</h1>
-    <my-button @click="fetchPosts">
-      Get the posts
-    </my-button>
-<!--    We've cleaned the previous comments as you see for the new branch to be light and clear-->
-<!--    Here we create a new button for getting the posts from other source-->
-<!--    It operates with the function 'fetchPosts', which will be described in the methods-->
     <my-button
       @click="showDialog"
       style="margin: 15px 0;"
@@ -63,21 +57,32 @@ export default{
       try{
         // The try/catch statement in an async function is used to handle errors that may occur during the execution of the asynchronous operation.
         // Since asynchronous operations can take some time to complete, they may encounter errors that are not immediately apparent
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
-        // We set the variable response, which is equal to the data we get by axios from the web
-        // The await statement is used in async functions to make the method operate when all the data is collected
-        // as you see, we're collecting the data with axios.get method by adding the url of the data we want to get
-        // We wrote '?_limit=10' to limit the data objects up to 10
-        // This website is widely used to provide fake data for tests or for analysis
-        this.posts = response.data
-        // Here we say that our model 'posts' should get the collected data response
+        setTimeout(async () =>{
+          // We have deleted the button for getting the posts, because we want to get them automatically
+          // For that we have set the mounted hook for the fetchPosts method, so it will work when loading the DOM tree
+          // setTimeout function is always async
+          const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
+          // We set the variable response, which is equal to the data we get by axios from the web
+          // The await statement is used in async functions to make the method operate when all the data is collected
+          // as you see, we're collecting the data with axios.get method by adding the url of the data we want to get
+          // We wrote '?_limit=10' to limit the data objects up to 10
+          // This website is widely used to provide fake data for tests or for analysis
+          this.posts = response.data
+          // Here we say that our model 'posts' should get the collected data response
+        }, 1000)
+        // In the end we define the milliseconds of the timeout
       } catch (e) {
         // the catch block catches any errors that occur and logs them to the console
         alert(`Fetching error -> ${e}`)
         // Here we say that in case we have an error let it be alerted by the message in the brackets
-        // The argument (e) or anything else there is used to let us interract with the error if needed
+        // The argument (e) or anything else there is used to let us interact with the error if needed
       }
     }
+  },
+  mounted(){
+    // Mounted is one and the most used life hook from the life cycles of the components in Vue3
+    this.fetchPosts();
+    // Here we say that we want this method to operate right when the component is shown on the DOM tree
   }
 }
 </script>
