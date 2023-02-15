@@ -1,12 +1,21 @@
 <template>
   <div class="app">
     <h1>Page with the posts</h1>
-    <my-button
-      @click="showDialog"
-      style="margin: 15px 0;"
-    >
-      Create a post
-    </my-button>
+    <div class="app__btns">
+      <my-button
+          @click="showDialog"
+      >
+        Create a post
+      </my-button>
+      <my-select
+        v-model="selectedSort"
+        :options="sortOptions"
+      />
+<!--      Here we told the component to be two-way bound with the model selectedSort-->
+<!--      It's empty, but currently I don't know what is that for, so maybe later I'll explain it in the comment-->
+<!--      And we've also bound 'sortOptions' model to the options of this component-->
+<!--      This is giving the main value of the each option, and you'll understand how it works when you look the models-->
+    </div>
     <my-dialog v-model:show="dialogVisible">
       <post-form
           @create="createPost"
@@ -44,6 +53,15 @@ export default{
       dialogVisible: false,
       isPostLoading: false,
       // A new model for showing a text while the post isn't loaded
+      selectedSort: '',
+      sortOptions:[
+        // This model is set as an array, which has objects inside
+        // This is meant to be a tool to arrange the content of the page by a specific parameter
+        {value: 'title', name: 'By name'},
+          // As you might guess, the first object is for arranging everything by name, cause it's taking the title of each post
+        {value: 'body', name: 'By content'},
+          // And here of course everything will be arranged by content
+      ]
     }
   },
   methods: {
@@ -107,5 +125,12 @@ export default{
 
 .app{
   padding: 20px;
+}
+
+.app__btns{
+  margin: 15px 0;
+  /*We've cut this margin style from 'my-button' tag and put it here for comfortability*/
+  display:flex;
+  justify-content: space-between;
 }
 </style>
