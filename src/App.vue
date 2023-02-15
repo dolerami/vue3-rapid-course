@@ -12,9 +12,12 @@
         :options="sortOptions"
       />
 <!--      Here we told the component to be two-way bound with the model selectedSort-->
-<!--      It's empty, but currently I don't know what is that for, so maybe later I'll explain it in the comment-->
-<!--      And we've also bound 'sortOptions' model to the options of this component-->
-<!--      This is giving the main value of the each option, and you'll understand how it works when you look the models-->
+<!--      It's empty, so it will be able to get the value of the selected options-->
+<!--      We know, that v-model is doing a two-way binding, so here the value is bound with the model 'selectedSort'-->
+<!--      And the default event for the v-model in select is @change, so it's listening to the 'selectedSort'-->
+<!--      Here on change the selectedSort takes the event.target.value, which is the value of selected option-->
+<!--      And we've also bound 'sortOptions' model to the options props of this component-->
+<!--      We are sending this options to the child as an array, where the child takes an option with v-for-->
     </div>
     <my-dialog v-model:show="dialogVisible">
       <post-form
@@ -112,6 +115,23 @@ export default{
     // Mounted is one and the most used life hook from the life cycles of the components in Vue3
     this.fetchPosts();
     // Here we say that we want this method to operate right when the component is shown on the DOM tree
+  },
+  watch: {
+    // Method watch is operating when the model is being changed and sends a callback function for the changed data
+    // This could be possible to do in methods, but it would be a hard and long thing, also maybe problematic
+    selectedSort (newValue) {
+    //   // Here we're setting 'selectedSort' as a model for this method to watch
+    //   // And the argument for this model is the newValue it gets every time being changed
+    //   console.log(newValue);
+    //   // As the model is changed, this console.log will be operated
+      this.posts.sort((post1, post2) => {
+        return post1[newValue]?.localeCompare(post2[newValue])
+      })
+    },
+    // dialogVisible(newValue){
+    //   // Here it will watch the changes and tell whether the dialog is visible or not
+    //   console.log(newValue);
+    // }
   }
 }
 </script>

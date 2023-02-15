@@ -40,7 +40,25 @@ export default {
         body: '',
       }
     },
-  }
+  },
+  // watch:{
+  //   // This is another example of watch function
+  //   post:{
+  //     // Here we're watching not just a simple model, but an object with models inside
+  //     // If we write it as we did before, like watch:{post(newValue){console.log(newValue)}}, it won't work
+  //     // So when we insert some new values in the input, it will not show it in the console
+  //     // The reason is that this is an object, and watch is watching to it globally, not detailed
+  //     // For us to watch it detailed, we have to write another object in the watch, which is post:{}
+  //     handler(newValue){
+  //       // Then in this object we're operating handler option to watch the changes of each component in the object
+  //       console.log(newValue);
+  //     },
+  //     deep: true,
+  //     // The important part is using 'deep' option iinside to watch the separate changes in the object
+  //     // Deep is set to false by default, so when we change it to 'true', it will start to watch the detailed changes
+  //   }
+  // }
+  // // But we'll comment this, cause it was just an example
 }
 </script>
 
