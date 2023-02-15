@@ -1,6 +1,14 @@
 <template>
   <div class="app">
     <h1>Page with the posts</h1>
+<!--    <input type="text" v-model.number="modifierValue">-->
+<!--      Here we've created a test input for working with v-model modifiers-->
+<!--      to write a modifier to v-model you simply need to write it after a dot after a v-model - v-model.trim-->
+<!--      Modifier 'trim' removes all the spaces in the beginning and in the end of the text input-->
+<!--      Modifier 'number' turns the input values into number format only-->
+<!--      You can write the modifiers as a chain, like v-model.trim.number-->
+<!--      There is also another one - 'lazy', which delays updating the bound data-->
+<!--      It will be updated when the user finishes inputting values-->
     <my-button
       @click="showDialog"
       style="margin: 15px 0;"
@@ -72,6 +80,7 @@ export default{
       ],
       dialogVisible: false,
       // This model's value is false by default, so it will not be visible in the beginning
+      modifierValue: '',
     }
   },
   methods: {
