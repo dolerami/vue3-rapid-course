@@ -15,7 +15,12 @@
     <post-list
         :posts="posts"
         @remove="removePost"
+        v-if="!isPostLoading"
     />
+<!--    We want this post to be visible only when isPostLoading is false (it is by default)-->
+<!--    Sometimes it's confusing, but when we use ! near the model, it means that the boolean value of that model is false-->
+    <div v-else>Loading...</div>
+<!--    When isPostLoading is true, we will see this div-->
   </div>
 </template>
 
@@ -37,6 +42,8 @@ export default{
     return{
       posts:[],
       dialogVisible: false,
+      isPostLoading: false,
+      // A new model for showing a text while the post isn't loaded
     }
   },
   methods: {
@@ -57,29 +64,33 @@ export default{
       try{
         // The try/catch statement in an async function is used to handle errors that may occur during the execution of the asynchronous operation.
         // Since asynchronous operations can take some time to complete, they may encounter errors that are not immediately apparent
-        setTimeout(async () =>{
-          // We have deleted the button for getting the posts, because we want to get them automatically
-          // For that we have set the mounted hook for the fetchPosts method, so it will work when loading the DOM tree
-          // setTimeout function is always async
-          const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
-          // We set the variable response, which is equal to the data we get by axios from the web
-          // The await statement is used in async functions to make the method operate when all the data is collected
-          // as you see, we're collecting the data with axios.get method by adding the url of the data we want to get
-          // We wrote '?_limit=10' to limit the data objects up to 10
-          // This website is widely used to provide fake data for tests or for analysis
-          this.posts = response.data
-          // Here we say that our model 'posts' should get the collected data response
-        }, 1000)
-        // In the end we define the milliseconds of the timeout
+        this.isPostLoading = true;
+        // Here we set a new condition, according which during this fetchPosts() method firstly our loading indicator is true
+        // It means that we will see the posts list, because above we say for the postsList v-if="!isPostLoading"
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
+        // We set the variable response, which is equal to the data we get by axios from the web
+        // The await statement is used in async functions to make the method operate when all the data is collected
+        // as you see, we're collecting the data with axios.get method by adding the url of the data we want to get
+        // We wrote '?_limit=10' to limit the data objects up to 10
+        // This website is widely used to provide fake data for tests or for analysis
+        this.posts = response.data
+        // Here we say that our model 'posts' should get the collected data response
       } catch (e) {
         // the catch block catches any errors that occur and logs them to the console
         alert(`Fetching error -> ${e}`)
         // Here we say that in case we have an error let it be alerted by the message in the brackets
         // The argument (e) or anything else there is used to let us interact with the error if needed
+      } finally {
+        // We will always see the result written in 'finally', regardless whether we have an error or not
+        this.isPostLoading = false;
+        // We say that after everything we want this model to be false
+        // It means that we won't see the indicator 'Loading...'
+        // But in this case we don't need the setTimeout() function, so I'll remove it
       }
     }
   },
   mounted(){
+    // do something
     // Mounted is one and the most used life hook from the life cycles of the components in Vue3
     this.fetchPosts();
     // Here we say that we want this method to operate right when the component is shown on the DOM tree
