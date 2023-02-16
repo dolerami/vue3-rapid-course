@@ -1,6 +1,10 @@
 <template>
   <div class="app">
     <h1>Page with the posts</h1>
+    <my-input
+      v-model="searchQuery"
+      placeholder="Search..."
+    />
     <div class="app__btns">
       <my-button
           @click="showDialog"
@@ -25,7 +29,7 @@
       />
     </my-dialog>
     <post-list
-        :posts="sortedPosts"
+        :posts="sortedAndSearchedPosts"
         @remove="removePost"
         v-if="!isPostLoading"
     />
@@ -33,8 +37,12 @@
 <!--    Sometimes it's confusing, but when we use ! near the model, it means that the boolean value of that model is false-->
 <!--    ************ computed **************-->
 <!--    As you see, we've changed the binding model of the posts prop from 'posts' to 'sortedPosts' for the computed property-->
-<!--    It means that the array 'posts' will get the computed value from the computed property by the model 'sortedPosts'-->
+<!--    It means that the array 'posts' will get the computed value from the computed property by the prop 'sortedPosts'-->
 <!--    The rest will be explained in the computed section-->
+<!--    **** filtration and search with computed **********-->
+<!--    We change the bound computed property of the 'posts' props one more time, setting 'sortedAndSearchedPosts'-->
+<!--    This property includes also 'sortedPosts' property, so don't worry about that-->
+<!--    This will help us also to operate the searching line on our page-->
     <div v-else>Loading...</div>
 <!--    When isPostLoading is true, we will see this div-->
   </div>
@@ -61,6 +69,8 @@ export default{
       isPostLoading: false,
       // A new model for showing a text while the post isn't loaded
       selectedSort: '',
+      searchQuery: '',
+      // This model is empty to be filled with the inserted value on the input line
       sortOptions:[
         // This model is set as an array, which has objects inside
         // This is meant to be a tool to arrange the content of the page by a specific parameter
@@ -140,9 +150,18 @@ export default{
       // The next steps are the same as explained for the watch property
       // The difference is that we are doing a straight sorting with an arrow function
       // As we don't pass an argument to the sortedPosts(), we're setting 'this.selectedSort' as a parameter for the arguments
-    }
+    },
     // As a result, it calculates the changes and returns us the new value based on these changes
     // It saves these changes in a cache, and every time it is based on the latest change it has done
+    sortedAndSearchedPosts(){
+      // We create another computed property, which includes the first one too, it is based on that one let's say
+      // This will help us to bind this property to the component using the first one at the same time
+      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
+      // Here we return the value of the sorting property (sortedPosts) and doing some filtration after
+      // As an argument we have 'post', which is a boolean type
+      // It's true if the title of the post includes the inserted value on the search input (searchQuery), very ease
+      // We've added 'toLowerCase()' function to those properties to avoid errors occurred by typing on different letters
+    }
   },
   watch: {
     // Method watch is operating when the model is being changed and sends a callback function for the changed data
