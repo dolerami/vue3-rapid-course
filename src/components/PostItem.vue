@@ -1,8 +1,8 @@
 <template>
   <div class="post">
     <div>
-      <div><strong>Title:</strong>{{post.title}}</div>
-      <div><strong>Content:</strong>{{post.body}}</div>
+      <div><strong>Title: </strong>{{post.title}}</div>
+      <div><strong>Content: </strong>{{post.body}}</div>
     </div>
     <div class="post__btns">
       <my-button

@@ -25,12 +25,16 @@
       />
     </my-dialog>
     <post-list
-        :posts="posts"
+        :posts="sortedPosts"
         @remove="removePost"
         v-if="!isPostLoading"
     />
 <!--    We want this post to be visible only when isPostLoading is false (it is by default)-->
 <!--    Sometimes it's confusing, but when we use ! near the model, it means that the boolean value of that model is false-->
+<!--    ************ computed **************-->
+<!--    As you see, we've changed the binding model of the posts prop from 'posts' to 'sortedPosts' for the computed property-->
+<!--    It means that the array 'posts' will get the computed value from the computed property by the model 'sortedPosts'-->
+<!--    The rest will be explained in the computed section-->
     <div v-else>Loading...</div>
 <!--    When isPostLoading is true, we will see this div-->
   </div>
@@ -116,22 +120,56 @@ export default{
     this.fetchPosts();
     // Here we say that we want this method to operate right when the component is shown on the DOM tree
   },
+  computed:{
+    // The property 'computed' here can have the same effect as the property watch, but it works a little different
+    // The main difference is the result, because computed is returning us a value, which we can use later, and watch doesn't
+    // There are other differences too, but this is the most important
+    // As we want to use the value, we will use computed instead of watch
+    //   You may have a question like why do we need to use computed instead of methods?
+    //   There are some differences between these 2, but the main thing is the following
+    //   Methods work when we do certain action and invoke them, such as clicking a button
+    //   While computed works when the dependencies are changed, like the models attached to them
+    sortedPosts(){
+      // Here we've created a function, which is kinda local as you see, like we don't call it in the template, only here
+      // And this function will operate when the value of the model 'selectedSort' is changed
+      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
+      // Here we tell to return us a sorted version of the array 'posts', but we wrote it a little different
+      // [...this.posts] - this is called a spread operator, which is creating a virtual copy of our array
+      // This virtual copy gets all the parameters of the original, and later all the changes refer only to that copy
+      // This way we avoid from the possible problems occurring while changing the original array
+      // The next steps are the same as explained for the watch property
+      // The difference is that we are doing a straight sorting with an arrow function
+      // As we don't pass an argument to the sortedPosts(), we're setting 'this.selectedSort' as a parameter for the arguments
+    }
+    // As a result, it calculates the changes and returns us the new value based on these changes
+    // It saves these changes in a cache, and every time it is based on the latest change it has done
+  },
   watch: {
     // Method watch is operating when the model is being changed and sends a callback function for the changed data
     // This could be possible to do in methods, but it would be a hard and long thing, also maybe problematic
-    selectedSort (newValue) {
+    // selectedSort (newValue) {
     //   // Here we're setting 'selectedSort' as a model for this method to watch
     //   // And the argument for this model is the newValue it gets every time being changed
     //   console.log(newValue);
     //   // As the model is changed, this console.log will be operated
-      this.posts.sort((post1, post2) => {
-        return post1[newValue]?.localeCompare(post2[newValue])
-      })
-    },
-    // dialogVisible(newValue){
-    //   // Here it will watch the changes and tell whether the dialog is visible or not
-    //   console.log(newValue);
-    // }
+    //   this.posts.sort((post1, post2) => {
+    //     // as you see, we're using a sorting function for this array to arrange the objects by name or by body
+    //     // As an argument, we're taking 2 names, let's call them post1 and post2
+    //     // These arguments are referring to 2 random objects in the array, which will be compared to each other
+    //     return post1[newValue]?.localeCompare(post2[newValue])
+    //     // Then as you see we return the result, which is post1 compared to post2 with the function 'localeCompare'
+    //     // As parameters they take either the argument of the main function in the watch (newValue), or the function itself
+    //     // So it could be post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+    //     And '?.' here is the optional chaining operator
+    //     It is to safely access the property value, in case the selectedSort property is not defined
+    //     As a result, it takes positive, negative or a zero. When zero, nothing is changed
+    //     When positive, 'post1' comes after 'post2', and when negative, 'post1' will be before 'post2'. Simple
+  //     })
+  //   },
+  //   // dialogVisible(newValue){
+  //   //   // Here it will watch the changes and tell whether the dialog is visible or not
+  //   //   console.log(newValue);
+  //   // }
   }
 }
 </script>
