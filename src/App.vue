@@ -45,6 +45,20 @@
 <!--    This will help us also to operate the searching line on our page-->
     <div v-else>Loading...</div>
 <!--    When isPostLoading is true, we will see this div-->
+    <div class="page__wrapper">
+<!--      We've created a separate div as a container or root div for the page numbers section below the webpage-->
+      <div
+          v-for="pageNumber in totalPages"
+          :key="pageNumber"
+          class="page"
+      >
+        {{ pageNumber }}
+      </div>
+<!--      And as you see here is the page numbers div itself. We use 'v-for' here to show each page in the total amount-->
+<!--      We set the name of each page by the argument 'pageNumber' not to mix it with the model 'page'-->
+<!--      So after 'v-for' it's important to set the key, and we are setting 'pageNumber' as the key cause it's unique-->
+<!--      Also we set the 'pageNumber' as the content of the div for the algorithm to understand and show the current page-->
+    </div>
   </div>
 </template>
 
@@ -71,6 +85,12 @@ export default{
       selectedSort: '',
       searchQuery: '',
       // This model is empty to be filled with the inserted value on the input line
+      page: 1,
+      // This model is for starting page to be set as the page 1 by default
+      limit: 10,
+      // Here we are setting a limit to the posts per page
+      totalPages: 0,
+      // This will be a model for the total amount of the web pages in our website, later the number will be increased
       sortOptions:[
         // This model is set as an array, which has objects inside
         // This is meant to be a tool to arrange the content of the page by a specific parameter
@@ -102,12 +122,24 @@ export default{
         this.isPostLoading = true;
         // Here we set a new condition, according which during this fetchPosts() method firstly our loading indicator is true
         // It means that we will see the posts list, because above we say for the postsList v-if="!isPostLoading"
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
-        // We set the variable response, which is equal to the data we get by axios from the web
-        // The await statement is used in async functions to make the method operate when all the data is collected
-        // as you see, we're collecting the data with axios.get method by adding the url of the data we want to get
-        // We wrote '?_limit=10' to limit the data objects up to 10
-        // This website is widely used to provide fake data for tests or for analysis
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+          // *********** Pagination ****************
+          // As you see, we've deleted the ending query parameter '?_limit=10' from the website url
+          // It's because we're going to add more query parameters, so it's more comfortable to do it this way:
+          params:{
+            _page: this.page,
+            _limit: this.limit,
+          }
+        });
+        this.totalPages = Math.ceil(response.headers.get('x-total-count') / this.limit);
+        // Here we say that the total number of the pages are being counted following way
+        // We're taking the headers section from the response and getting the 'x-total-count' value by the method 'get'
+        // It's important, because the latest version of Axios requires to use the method in the end, otherwise it doesn't work
+        // That is the total number of the posts per page on the original source
+        // Then we're dividing that number on the limit number we've set, thus saying that one page should include 10 posts
+        // Then we're taking this in the Math.ceil function to make it a whole number by circling that up
+        // If there are f.e. 101 posts, which is divided on 10 (limit), it will be 11 in this case
+        // For pagination this is important because the last post will be on another page alone
         this.posts = response.data
         // Here we say that our model 'posts' should get the collected data response
       } catch (e) {
@@ -209,5 +241,13 @@ export default{
   /*We've cut this margin style from 'my-button' tag and put it here for comfortability*/
   display:flex;
   justify-content: space-between;
+}
+.page__wrapper{
+  display:flex;
+  margin-top: 15px;
+}
+.page{
+  border: 1px solid black;
+  padding: 10px;
 }
 </style>
