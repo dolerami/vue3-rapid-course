@@ -51,6 +51,10 @@
           v-for="pageNumber in totalPages"
           :key="pageNumber"
           class="page"
+          :class="{
+            'current-page': page === pageNumber
+          }"
+          @click="changePage(pageNumber)"
       >
         {{ pageNumber }}
       </div>
@@ -58,6 +62,16 @@
 <!--      We set the name of each page by the argument 'pageNumber' not to mix it with the model 'page'-->
 <!--      So after 'v-for' it's important to set the key, and we are setting 'pageNumber' as the key cause it's unique-->
 <!--      Also we set the 'pageNumber' as the content of the div for the algorithm to understand and show the current page-->
+<!--      ****** Dynamic binding of styles *********-->
+<!--      We have set a class in the styles for the current page, and there's a method in Vue3 to bind that class to the tag-->
+<!--      This is a dynamic styles binding method in Vue3. Here we've set an object to operate for binding-->
+<!--      The first part is the key, here it's the class name, so this binding will refer to that particular class-->
+<!--      Then it comes the condition. When the model 'page' is equal to the argument 'pageNumber', the class will operate-->
+<!--      It's also possible to do a dynamic binding for the styles, here's an example-->
+<!--      :style="{ background: backgroundColor }", where 'backgroundColor' is a model with a value, which can be changed-->
+<!--      ********** Dynamic changes of the pages ***************-->
+<!--      For this firstly we need to listen to the event 'click', which will operate a function changing the page-->
+<!--      As an argument, we're setting the pageNumber for that function-->
     </div>
   </div>
 </template>
@@ -112,6 +126,13 @@ export default{
     showDialog(){
       this.dialogVisible = true;
     },
+    changePage(pageNumber){
+      this.page = pageNumber;
+      // Here we say, that when clicked the model page gets the pageNumber as a value
+      // But this isn't enough for changing the page, because we also need to operate the method 'fetchPosts()'
+      // We can do it very simple way just here - this.fetchPosts()
+      // But this way the pages are getting loaded slow, let's do it in the watch
+    },
     async fetchPosts(){
       // Here we create an async method, which is a little different from the ordinary methods we use
       // An asynchronous function is a function that may take some time to complete, because it performs operations that may involve waiting for a response from a server, reading/writing to a database, or performing other I/O operations.
@@ -137,7 +158,7 @@ export default{
         // It's important, because the latest version of Axios requires to use the method in the end, otherwise it doesn't work
         // That is the total number of the posts per page on the original source
         // Then we're dividing that number on the limit number we've set, thus saying that one page should include 10 posts
-        // Then we're taking this in the Math.ceil function to make it a whole number by circling that up
+        // Then we're taking this in the Math.ceil function to make it a whole number by rounding that up
         // If there are f.e. 101 posts, which is divided on 10 (limit), it will be 11 in this case
         // For pagination this is important because the last post will be on another page alone
         this.posts = response.data
@@ -221,6 +242,12 @@ export default{
   //   //   // Here it will watch the changes and tell whether the dialog is visible or not
   //   //   console.log(newValue);
   //   // }
+    page(){
+      // We're currently watching to the model 'page', so if it changes, the watch will operate
+      this.fetchPosts();
+      // So as you understood, when the 'page' changes, it will operate the function this.fetchPosts()
+      // This is a much faster way to load the pages
+    }
   }
 }
 </script>
@@ -250,4 +277,8 @@ export default{
   border: 1px solid black;
   padding: 10px;
 }
+.current-page{
+  border: 2px solid teal;
+}
+/*This class was made to be bound to the tag later by 'v-bind'*/
 </style>

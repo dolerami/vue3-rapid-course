@@ -1,6 +1,8 @@
 <template>
   <div class="post">
     <div>
+      <div>{{ post.id }}</div>
+<!--      And here as you see we've created a new area to show the ids of each post-->
       <div><strong>Title: </strong>{{post.title}}</div>
       <div><strong>Content: </strong>{{post.body}}</div>
     </div>
