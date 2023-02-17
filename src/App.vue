@@ -44,35 +44,42 @@
 <!--    This property includes also 'sortedPosts' property, so don't worry about that-->
 <!--    This will help us also to operate the searching line on our page-->
     <div v-else>Loading...</div>
+    <div ref="observer" class="observer"></div>
+<!--    ************* Intersection Observer *****************-->
+<!--    Here we use the Intersection Observer vie its API-->
+<!--    We create a ref with observer to have a direct access in the script-->
+<!--    The style is set in the CSS section-->
+<!--    This is helping us to scroll and open more posts on the page-->
 <!--    When isPostLoading is true, we will see this div-->
-    <div class="page__wrapper">
-<!--      We've created a separate div as a container or root div for the page numbers section below the webpage-->
-      <div
-          v-for="pageNumber in totalPages"
-          :key="pageNumber"
-          class="page"
-          :class="{
-            'current-page': page === pageNumber
-          }"
-          @click="changePage(pageNumber)"
-      >
-        {{ pageNumber }}
-      </div>
-<!--      And as you see here is the page numbers div itself. We use 'v-for' here to show each page in the total amount-->
-<!--      We set the name of each page by the argument 'pageNumber' not to mix it with the model 'page'-->
-<!--      So after 'v-for' it's important to set the key, and we are setting 'pageNumber' as the key cause it's unique-->
-<!--      Also we set the 'pageNumber' as the content of the div for the algorithm to understand and show the current page-->
-<!--      ****** Dynamic binding of styles *********-->
-<!--      We have set a class in the styles for the current page, and there's a method in Vue3 to bind that class to the tag-->
-<!--      This is a dynamic styles binding method in Vue3. Here we've set an object to operate for binding-->
-<!--      The first part is the key, here it's the class name, so this binding will refer to that particular class-->
-<!--      Then it comes the condition. When the model 'page' is equal to the argument 'pageNumber', the class will operate-->
-<!--      It's also possible to do a dynamic binding for the styles, here's an example-->
-<!--      :style="{ background: backgroundColor }", where 'backgroundColor' is a model with a value, which can be changed-->
-<!--      ********** Dynamic changes of the pages ***************-->
-<!--      For this firstly we need to listen to the event 'click', which will operate a function changing the page-->
-<!--      As an argument, we're setting the pageNumber for that function-->
-    </div>
+<!--    *********** Pagination with page numbers **************-->
+<!--    <div class="page__wrapper">-->
+<!--&lt;!&ndash;      We've created a separate div as a container or root div for the page numbers section below the webpage&ndash;&gt;-->
+<!--      <div-->
+<!--          v-for="pageNumber in totalPages"-->
+<!--          :key="pageNumber"-->
+<!--          class="page"-->
+<!--          :class="{-->
+<!--            'current-page': page === pageNumber-->
+<!--          }"-->
+<!--          @click="changePage(pageNumber)"-->
+<!--      >-->
+<!--        {{ pageNumber }}-->
+<!--      </div>-->
+<!--&lt;!&ndash;      And as you see here is the page numbers div itself. We use 'v-for' here to show each page in the total amount&ndash;&gt;-->
+<!--&lt;!&ndash;      We set the name of each page by the argument 'pageNumber' not to mix it with the model 'page'&ndash;&gt;-->
+<!--&lt;!&ndash;      So after 'v-for' it's important to set the key, and we are setting 'pageNumber' as the key cause it's unique&ndash;&gt;-->
+<!--&lt;!&ndash;      Also we set the 'pageNumber' as the content of the div for the algorithm to understand and show the current page&ndash;&gt;-->
+<!--&lt;!&ndash;      ****** Dynamic binding of styles *********&ndash;&gt;-->
+<!--&lt;!&ndash;      We have set a class in the styles for the current page, and there's a method in Vue3 to bind that class to the tag&ndash;&gt;-->
+<!--&lt;!&ndash;      This is a dynamic styles binding method in Vue3. Here we've set an object to operate for binding&ndash;&gt;-->
+<!--&lt;!&ndash;      The first part is the key, here it's the class name, so this binding will refer to that particular class&ndash;&gt;-->
+<!--&lt;!&ndash;      Then it comes the condition. When the model 'page' is equal to the argument 'pageNumber', the class will operate&ndash;&gt;-->
+<!--&lt;!&ndash;      It's also possible to do a dynamic binding for the styles, here's an example&ndash;&gt;-->
+<!--&lt;!&ndash;      :style="{ background: backgroundColor }", where 'backgroundColor' is a model with a value, which can be changed&ndash;&gt;-->
+<!--&lt;!&ndash;      ********** Dynamic changes of the pages ***************&ndash;&gt;-->
+<!--&lt;!&ndash;      For this firstly we need to listen to the event 'click', which will operate a function changing the page&ndash;&gt;-->
+<!--&lt;!&ndash;      As an argument, we're setting the pageNumber for that function&ndash;&gt;-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -126,13 +133,13 @@ export default{
     showDialog(){
       this.dialogVisible = true;
     },
-    changePage(pageNumber){
-      this.page = pageNumber;
-      // Here we say, that when clicked the model page gets the pageNumber as a value
-      // But this isn't enough for changing the page, because we also need to operate the method 'fetchPosts()'
-      // We can do it very simple way just here - this.fetchPosts()
-      // But this way the pages are getting loaded slow, let's do it in the watch
-    },
+    // changePage(pageNumber){
+    //   this.page = pageNumber;
+    //   // Here we say, that when clicked the model page gets the pageNumber as a value
+    //   // But this isn't enough for changing the page, because we also need to operate the method 'fetchPosts()'
+    //   // We can do it very simple way just here - this.fetchPosts()
+    //   // But this way the pages are getting loaded slow, let's do it in the watch
+    // },
     async fetchPosts(){
       // Here we create an async method, which is a little different from the ordinary methods we use
       // An asynchronous function is a function that may take some time to complete, because it performs operations that may involve waiting for a response from a server, reading/writing to a database, or performing other I/O operations.
@@ -175,6 +182,33 @@ export default{
         // It means that we won't see the indicator 'Loading...'
         // But in this case we don't need the setTimeout() function, so I'll remove it
       }
+    },
+    async loadMorePosts(){
+      // This is another async method to load more posts while scrolling
+      // This uses Intersection Observer
+      try{
+        this.page += 1;
+        // We add the number to load more data
+        // this.isPostLoading = true;
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+          params:{
+            _page: this.page,
+            _limit: this.limit,
+          }
+        });
+        this.totalPages = Math.ceil(response.headers.get('x-total-count') / this.limit);
+        // Everything i the same as it was for the posts fetching
+        this.posts = [...this.posts, ...response.data];
+        // Here we say in the end, that posts model is equal to the new virtual array, which is a little different
+        // The first part of this array is the copy of the posts model
+        // Then the response data copy is added
+        // So we will have the new data loaded while scrolling
+      } catch (e) {
+        alert(`Fetching error -> ${e}`)
+      }
+        // finally {
+      //   this.isPostLoading = false;
+      // }
     }
   },
   mounted(){
@@ -182,6 +216,28 @@ export default{
     // Mounted is one and the most used life hook from the life cycles of the components in Vue3
     this.fetchPosts();
     // Here we say that we want this method to operate right when the component is shown on the DOM tree
+    // console.log(this.$refs.observer);
+    const options = {
+      // Here we're putting this Intersection Observer API codes to be mounted right after the fetching process
+      // root: document.querySelector('#scrollArea'),
+      // // We don't need this 'root:' cause it's the visible area of the browser by default, so I'll comment it
+      // And let's change 'var' into 'const'
+      rootMargin: '0px',
+      threshold: 1.0
+    }
+    const callback = (entries, observer) => {
+      // Here this callback is the function operating when we're intersecting a certain element on the webpage
+      /* Content excerpted, show below */
+      if(entries[0].isIntersecting && this.page < this.totalPages){
+        this.loadMorePosts()
+      }
+      // Here we say that it's true if it intersects with the div and the page number is smaller than the pages' total number
+      // The result is the function to load more posts
+    };
+    const observer = new IntersectionObserver(callback, options);
+    // And this is a new object created based on our callback function results and options
+    observer.observe(this.$refs.observer);
+    // I don't know what is this yet, might comment and change later
   },
   computed:{
     // The property 'computed' here can have the same effect as the property watch, but it works a little different
@@ -242,12 +298,12 @@ export default{
   //   //   // Here it will watch the changes and tell whether the dialog is visible or not
   //   //   console.log(newValue);
   //   // }
-    page(){
-      // We're currently watching to the model 'page', so if it changes, the watch will operate
-      this.fetchPosts();
-      // So as you understood, when the 'page' changes, it will operate the function this.fetchPosts()
-      // This is a much faster way to load the pages
-    }
+  //   page(){
+  //     // We're currently watching to the model 'page', so if it changes, the watch will operate
+  //     this.fetchPosts();
+  //     // So as you understood, when the 'page' changes, it will operate the function this.fetchPosts()
+  //     // This is a much faster way to load the pages
+  //   }
   }
 }
 </script>
@@ -281,4 +337,9 @@ export default{
   border: 2px solid teal;
 }
 /*This class was made to be bound to the tag later by 'v-bind'*/
+
+.observer{
+  height: 30px;
+  background: green;
+}
 </style>
