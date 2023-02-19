@@ -8,6 +8,17 @@
     </div>
     <div class="post__btns">
       <my-button
+        @click="$router.push(`/posts/${post.id}`)"
+      >
+        Open
+      </my-button>
+<!--      This button is for a dynamic navigation of every post-->
+<!--      It means that the post components and their elements are the same (not the content), but the paths are different-->
+<!--      We've set a dynamic navigation to this button, so when clicking it will take to the page for that particular post-->
+<!--      We do the same trick with $router.push()-->
+<!--      But in the braces we write the route in this format - `${}` to be able to give props too-->
+<!--      So we go to the page posts and pick a post by its ID-->
+      <my-button
         @click="$emit('remove', post)"
       >
         Delete
@@ -36,5 +47,8 @@ export default {
   display: flex;
   align-items:center;
   justify-content: space-between;
+}
+.post__btns{
+  display: flex;
 }
 </style>

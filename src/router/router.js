@@ -7,6 +7,7 @@ import {createRouter, createWebHistory} from "vue-router";
 // And here we can see the import of the factory functions from one source
 import PostPage from "@/pages/PostPage";
 import About from "@/pages/About";
+import PostidPage from "@/pages/PostidPage";
 
 
 
@@ -21,13 +22,18 @@ const routes = [
         // And here as you see we've attached the component, which was automatically imported above
     },
     {
-        path: '/pages',
+        path: '/posts',
         component: PostPage
         // As you see, here we have a new route for this component
     },
     {
         path: '/about',
         component: About
+    },
+    {
+        path: '/posts/:id',
+        // Here we're being dynamically navigated to the specific ID we type or click on the post
+        component: PostidPage
     },
 ]
 
@@ -49,3 +55,9 @@ const router = createRouter({
 
 export default router;
 // This is how we export the router and are able to use it in other places
+
+// Static navigation refers to the process of defining routes in advance
+// It's having them be fixed throughout the application's lifecycle
+// So here as you see we're creating static navigations
+// The routes are defined at build time and do not change during runtime
+// Static navigation is often used for pages that do not require any data fetching or that do not depend on user input

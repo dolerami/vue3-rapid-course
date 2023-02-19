@@ -7,7 +7,7 @@
 <!--    It supposed to be yellow but it's gray maybe because of the PHPStorm version-->
 <!--    So as you see this is an alternative for using the router link in a component-->
     <div class="navbar__btns">
-      <my-button @click="$router.push('/pages')">Post Pages</my-button>
+      <my-button @click="$router.push('/posts')">Page of Posts</my-button>
       <my-button style="margin-left: 20px;" @click="$router.push('/about')">About Us</my-button>
     </div>
   </div>
