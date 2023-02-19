@@ -1,4 +1,5 @@
 <template>
+  <navbar></navbar>
   <div class="app">
     <router-view></router-view>
 <!--    Here we use this component for the router to show the result of the URL line type-->
@@ -8,12 +9,15 @@
 </template>
 
 <script>
-export default {
+import Navbar from "@/components/Navbar";
 
+export default {
+  components: {Navbar}
 }
 </script>
 
-<style scoped>
+<style>
+/*We removed scoped for the navbar to use its styles at full*/
 * {
   margin:0;
   padding:0;
