@@ -189,7 +189,10 @@ export default{
       try{
         this.page += 1;
         // We add the number to load more data
+        // This is important because when we load more posts the next page has greater number, so for that we must do this
         // this.isPostLoading = true;
+        // // We're commenting this line because we need that only in the beginning when loading the posts
+        // // Later it disturbs a lot, so we need to delete it and also the opposite from the finally
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
           params:{
             _page: this.page,
@@ -209,6 +212,7 @@ export default{
         // finally {
       //   this.isPostLoading = false;
       // }
+      // // Already explained above why we've commented this
     }
   },
   mounted(){
@@ -216,7 +220,7 @@ export default{
     // Mounted is one and the most used life hook from the life cycles of the components in Vue3
     this.fetchPosts();
     // Here we say that we want this method to operate right when the component is shown on the DOM tree
-    // console.log(this.$refs.observer);
+    // // console.log(this.$refs.observer);
     const options = {
       // Here we're putting this Intersection Observer API codes to be mounted right after the fetching process
       // root: document.querySelector('#scrollArea'),
@@ -227,9 +231,20 @@ export default{
     }
     const callback = (entries, observer) => {
       // Here this callback is the function operating when we're intersecting a certain element on the webpage
+      // "entries" is an object in this array,which has a target - this.observer
+      // When we reach the div 'observer', the boolean property becomes true, and we're having one more array
+      // So this way it counts how many times we've reached this div
       /* Content excerpted, show below */
       if(entries[0].isIntersecting && this.page < this.totalPages){
+        // So here we're setting a condition
+        // First we target the element inside this 'entries' object, which has the index 0
+        // Because this boolean property is inside this element, so we need to reach it
+        // So firstly we're checking if 'isIntersecting' prop inside that object is true
+        // Then we check whether the value of 'page' is less than the value of 'totalPages'
+        // This is simply because it can't be greater than the totalPages itself
+        // This is a limiting step, cause if we dont write this condition, it will continue to load more posts
         this.loadMorePosts()
+        // As a result we operate this function to load more posts by fetching them from the website
       }
       // Here we say that it's true if it intersects with the div and the page number is smaller than the pages' total number
       // The result is the function to load more posts
@@ -237,7 +252,7 @@ export default{
     const observer = new IntersectionObserver(callback, options);
     // And this is a new object created based on our callback function results and options
     observer.observe(this.$refs.observer);
-    // I don't know what is this yet, might comment and change later
+    // So here we're finally setting the observer to observe our div with the ref named 'observer'
   },
   computed:{
     // The property 'computed' here can have the same effect as the property watch, but it works a little different
@@ -325,21 +340,22 @@ export default{
   display:flex;
   justify-content: space-between;
 }
-.page__wrapper{
-  display:flex;
-  margin-top: 15px;
-}
-.page{
-  border: 1px solid black;
-  padding: 10px;
-}
-.current-page{
-  border: 2px solid teal;
-}
-/*This class was made to be bound to the tag later by 'v-bind'*/
+/*.page__wrapper{*/
+/*  display:flex;*/
+/*  margin-top: 15px;*/
+/*}*/
+/*.page{*/
+/*  border: 1px solid black;*/
+/*  padding: 10px;*/
+/*}*/
+/*.current-page{*/
+/*  border: 2px solid teal;*/
+/*}*/
+/*!*This class was made to be bound to the tag later by 'v-bind'*!*/
 
 .observer{
   height: 30px;
   background: green;
 }
+/*In the real project this div is invisible, so we won't be needing to this styles*/
 </style>
