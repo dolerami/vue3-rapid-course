@@ -8,6 +8,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import PostPage from "@/pages/PostPage";
 import About from "@/pages/About";
 import PostidPage from "@/pages/PostidPage";
+import PostPageWithStore from "@/pages/PostPageWithStore";
 
 
 
@@ -34,6 +35,13 @@ const routes = [
         path: '/posts/:id',
         // Here we're being dynamically navigated to the specific ID we type or click on the post
         component: PostidPage
+    },
+    {
+        path: '/store',
+        // We've copied the posts' page and want to use Vuex inside
+        // for that we're creating a separate route to operate
+        component: PostPageWithStore
+        // And here we set the component
     },
 ]
 

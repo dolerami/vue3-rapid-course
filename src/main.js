@@ -6,6 +6,7 @@ import router from "@/router/router";
 // As we decided to import the file with directives, we comment this line
 import directives from "@/directives";
 // We need to import the created directives here
+import store from "@/store";
 
 const app = createApp(App)
 
@@ -31,4 +32,6 @@ app
     // This is the way to use other side-module and to register it
     // This way we can use also Bootstrap, Vuex, other plugins, libraries, etc.
     // In Vue 2 it was a little different
+    .use(store)
+    // This is how we connect store to the project, app.use(store), also importing above
     .mount('#app')
