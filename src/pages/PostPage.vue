@@ -30,7 +30,10 @@
         v-if="!isPostLoading"
     />
     <div v-else>Loading...</div>
-    <div ref="observer" class="observer"></div>
+<!--    <div ref="observer" class="observer"></div>-->
+    <div v-intersection="loadMorePosts" class="observer"></div>
+<!--    We have a new directive, so we need to use that instead of the ref observer-->
+<!--    Usually we give a function to the directive to operate-->
   </div>
 </template>
 
@@ -106,17 +109,18 @@ export default{
   },
   mounted(){
     this.fetchPosts();
-    const options = {
-      rootMargin: '0px',
-      threshold: 1.0
-    }
-    const callback = (entries, observer) => {
-      if(entries[0].isIntersecting && this.page < this.totalPages){
-        this.loadMorePosts()
-      }
-    };
-    const observer = new IntersectionObserver(callback, options);
-    observer.observe(this.$refs.observer);
+    // // const options = {
+    // //   rootMargin: '0px',
+    // //   threshold: 1.0
+    // // }
+    // // const callback = (entries, observer) => {
+    // //   if(entries[0].isIntersecting && this.page < this.totalPages){
+    // //     this.loadMorePosts()
+    // //   }
+    // // };
+    // // const observer = new IntersectionObserver(callback, options);
+    // // observer.observe(this.$refs.observer);
+    // As we have created a separate directive for intersection, we are using these functions there
   },
   computed:{
     sortedPosts(){
