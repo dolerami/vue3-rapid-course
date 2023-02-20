@@ -31,5 +31,7 @@ export default {
         observer.observe(el);
         // Then it observes the element that the directive is bound to
         // Here it's not the reference but the element
-    }
+    },
+    name: 'intersection',
+    // We need to add this line for the index.js file to get the name of the directive
 }

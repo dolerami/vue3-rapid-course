@@ -7,6 +7,7 @@
     <my-input
         v-model="searchQuery"
         placeholder="Search..."
+        v-focus
     />
     <div class="app__btns">
       <my-button
