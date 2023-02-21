@@ -1,35 +1,40 @@
 <template>
   <div>
+<!--    <h1>{{ $store.state.post.limit }}</h1>-->
+<!--&lt;!&ndash;    As we have a module in post prop in the state, we're calling it that way&ndash;&gt;-->
+<!--&lt;!&ndash;    Let's comment this&ndash;&gt;-->
+<!--    <h1>{{ $store.state.isAuth ? 'The user is authorised' : 'Please get authorised to be able to use the service'}}</h1>-->
+<!--    This is  another case to use a boolean type state model from Vuex-->
 <!--    <h1>{{ $store.state.likes }}</h1>-->
 <!--&lt;!&ndash;    This is how we are connecting the elements with the store&ndash;&gt;-->
 <!--&lt;!&ndash;    It is available inside every part of our application cause it's a global store&ndash;&gt;-->
-    <h1>{{ $store.getters.doubleLikes }}</h1>
+<!--    <h1>{{ $store.getters.doubleLikes }}</h1>-->
 <!--    This is the way to get the function from getters-->
 <!--    We don't call the function as a function with (), we call it as an object, because it returns some data-->
-    <div>
-<!--      Here we create some buttons for playing with the likes-->
-      <my-button @click="$store.commit('incrementLikes')">Like</my-button>
-      <my-button @click="$store.commit('decrementLikes')">Dislike</my-button>
-<!--      We listen to the event click and set the function $store.commit to call the function from the mutations-->
-<!--      Then we write the name of the mutation inside the braces-->
-<!--      In Vue 2 it will do autocomplete and give an error-->
-    </div>
+<!--    <div>-->
+<!--&lt;!&ndash;      Here we create some buttons for playing with the likes&ndash;&gt;-->
+<!--      <my-button @click="$store.commit('incrementLikes')">Like</my-button>-->
+<!--      <my-button @click="$store.commit('decrementLikes')">Dislike</my-button>-->
+<!--&lt;!&ndash;      We listen to the event click and set the function $store.commit to call the function from the mutations&ndash;&gt;-->
+<!--&lt;!&ndash;      Then we write the name of the mutation inside the braces&ndash;&gt;-->
+<!--&lt;!&ndash;      In Vue 2 it will do autocomplete and give an error&ndash;&gt;-->
+<!--    </div>-->
     <h1>Page with the posts</h1>
-    <my-input
-        v-model="searchQuery"
-        placeholder="Search..."
-        v-focus
-    />
+<!--    <my-input-->
+<!--        v-model="searchQuery"-->
+<!--        placeholder="Search..."-->
+<!--        v-focus-->
+<!--    />-->
     <div class="app__btns">
       <my-button
           @click="showDialog"
       >
         Create a post
       </my-button>
-      <my-select
-          v-model="selectedSort"
-          :options="sortOptions"
-      />
+<!--      <my-select-->
+<!--          v-model="selectedSort"-->
+<!--          :options="sortOptions"-->
+<!--      />-->
     </div>
     <my-dialog v-model:show="dialogVisible">
       <post-form
@@ -50,6 +55,8 @@
 import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
 import axios from "axios";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
+// This will help us to refer them without long codes
 
 export default{
   components:{
@@ -73,6 +80,13 @@ export default{
     }
   },
   methods: {
+    ...mapMutations({
+      setPage: 'post/setPage',
+    }),
+    ...mapActions({
+      loadMorePosts: 'post/loadMorePosts',
+      fetchPosts: 'post/fetchPosts',
+    }),
     createPost(post) {
       this.posts.push(post);
       this.dialogVisible = false;
@@ -83,49 +97,63 @@ export default{
     showDialog(){
       this.dialogVisible = true;
     },
-    async fetchPosts(){
-      try{
-        this.isPostLoading = true;
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-          params:{
-            _page: this.page,
-            _limit: this.limit,
-          }
-        });
-        this.totalPages = Math.ceil(response.headers.get('x-total-count') / this.limit);
-        this.posts = response.data
-      } catch (e) {
-        alert(`Fetching error -> ${e}`)
-      } finally {
-        this.isPostLoading = false;
-      }
-    },
-    async loadMorePosts(){
-      try{
-        this.page += 1;
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-          params:{
-            _page: this.page,
-            _limit: this.limit,
-          }
-        });
-        this.totalPages = Math.ceil(response.headers.get('x-total-count') / this.limit);
-        this.posts = [...this.posts, ...response.data];
-      } catch (e) {
-        alert(`Fetching error -> ${e}`)
-      }
-    }
+    // async fetchPosts(){
+    //   try{
+    //     this.isPostLoading = true;
+    //     const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+    //       params:{
+    //         _page: this.page,
+    //         _limit: this.limit,
+    //       }
+    //     });
+    //     this.totalPages = Math.ceil(response.headers.get('x-total-count') / this.limit);
+    //     this.posts = response.data
+    //   } catch (e) {
+    //     alert(`Fetching error -> ${e}`)
+    //   } finally {
+    //     this.isPostLoading = false;
+    //   }
+    // },
+    // async loadMorePosts(){
+    //   try{
+    //     this.page += 1;
+    //     const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+    //       params:{
+    //         _page: this.page,
+    //         _limit: this.limit,
+    //       }
+    //     });
+    //     this.totalPages = Math.ceil(response.headers.get('x-total-count') / this.limit);
+    //     this.posts = [...this.posts, ...response.data];
+    //   } catch (e) {
+    //     alert(`Fetching error -> ${e}`)
+    //   }
+    // }
   },
   mounted(){
     this.fetchPosts();
   },
   computed:{
-    sortedPosts(){
-      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
-    },
-    sortedAndSearchedPosts(){
-      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-    }
+    ...mapState({
+      posts: state => state.posts.posts,
+      isPostLoading: state => state.posts.isPostLoading,
+      selectedSort: state => state.posts.selectedSort,
+      searchQuery: state => state.posts.searchQuery,
+      page: state => state.posts.page,
+      limit: state => state.posts.limit,
+      totalPages: state => state.posts.totalPages,
+      sortOptions: state => state.posts.sortOptions,
+    }),
+    ...mapGetters({
+      sortedPosts: 'post/sortedPosts',
+      sortedAndSearchedPosts: 'post/sortedAndSearchedPosts',
+    }),
+    // sortedPosts(){
+    //   return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
+    // },
+    // sortedAndSearchedPosts(){
+    //   return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
+    // }
   },
   watch: {
   }
